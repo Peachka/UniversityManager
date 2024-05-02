@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">University</string>
+    <string name="wrong_pass">Check your password</string>
+    <string name="correct_input">Correct</string>
+    <string name="incorrect_email">No such user ot incorrect input</string>
+
 </resources>

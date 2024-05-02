@@ -9,10 +9,16 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.university.ui.create_account.CreateAccount
+import com.example.university.ui.create_account.CreateAccountScreen
+import com.example.university.ui.log_in.LogIn
 import com.example.university.ui.log_in.LogInScreen
 import com.example.university.ui.navigation.Screen
 import com.example.university.ui.theme.UniversityTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,9 +37,10 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun NavGraph(navController: NavHostController) {
 
-    NavHost(navController = navController, startDestination = Screen.LogIn.route){
-        composable(Screen.LogIn.route){ LogInScreen()}
-        composable(Screen.Home.route){}
+    NavHost(navController = navController, startDestination = Screen.LogIn.route) {
+        composable(Screen.LogIn.route) { LogIn(goToCreateAcc = { navController.navigate(Screen.CreateAccount.route) }) }
+        composable(Screen.CreateAccount.route) { CreateAccount(goToLoginScreen = { navController.navigate(Screen.LogIn.route) }) }
+        composable(Screen.Home.route) {}
     }
 }
 //
