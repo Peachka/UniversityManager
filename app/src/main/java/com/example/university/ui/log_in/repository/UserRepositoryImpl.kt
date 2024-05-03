@@ -5,9 +5,12 @@ import com.example.university.data.login.UserDAO
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class UserRepositoryImpl(
-    val userDAO: UserDAO
+@Singleton
+class UserRepositoryImpl @Inject constructor(
+    private val userDAO: UserDAO
 ): UserDaoRepository {
      override fun getAll(): Flow<List<User>> {
         return userDAO.getAll()

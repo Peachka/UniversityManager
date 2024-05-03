@@ -11,6 +11,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Button
 import androidx.compose.material.OutlinedTextField
+import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -29,13 +30,15 @@ import androidx.compose.ui.unit.dp
 import com.example.university.R
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import com.example.university.data.login.User
 
 
 @Composable
 fun CreateAccountScreen(
+    state: UserState,
     goToLoginScreen: () -> Unit,
-    addUser: (User) -> Unit
+    addUser: (String, String, String, String, String, goToLoginScreen: () -> Unit) -> Unit
 ) {
 
     val email = rememberSaveable { mutableStateOf("") }
@@ -58,26 +61,45 @@ fun CreateAccountScreen(
                 .clip(CircleShape)
         )
 
-        TextBox(label = "email", email)
-        TextBox(label = "password", password)
-        TextBox(label = "Ім'я", name)
-        TextBox(label = "Прізвище", SecondName)
-        TextBox(label = "Група", Group)
+        TextBox(
+            label = "email",
+            textState = email,
+            empty = state is UserState.InputError && state.emptyEmail,
+        )
+        TextBox(
+            label = "password",
+            textState = password,
+            empty = state is UserState.InputError && state.emptyPassword
+        )
+        TextBox(
+            label = "Ім'я",
+            textState = name,
+            empty = state is UserState.InputError && state.emptyName
+        )
+        TextBox(
+            label = "Прізвище",
+            textState = SecondName,
+            empty = state is UserState.InputError && state.emptySecondName
+        )
+        TextBox(
+            label = "Група",
+            textState = Group,
+            empty = state is UserState.InputError && state.emptyGroup
+        )
 
-        Button(onClick = {
+        Button(onClick =
+        {
             addUser(
-                User(
-                    email = email.value,
-                    password = password.value,
-                    name = name.value,
-                    secondName = SecondName.value,
-                    group = Group.value
-                )
+                email.value,
+                password.value,
+                name.value,
+                SecondName.value,
+                Group.value,
+                goToLoginScreen
             )
+
         }) {
             Text("Створити акаунт")
-
-
         }
     }
 }
@@ -86,7 +108,8 @@ fun CreateAccountScreen(
 @Composable
 fun TextBox(
     label: String,
-    textState: MutableState<String> = rememberSaveable { mutableStateOf("") }
+    textState: MutableState<String> = rememberSaveable { mutableStateOf("") },
+    empty: Boolean = false
 ) {
 
     var text by textState
@@ -99,6 +122,10 @@ fun TextBox(
         onValueChange = {
             text = it
         },
+
+        colors = TextFieldDefaults.outlinedTextFieldColors(
+            unfocusedBorderColor = if (empty) Color.Red else Color.Black // Set the desired unfocused border color
+        ),
         keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
         keyboardOptions = KeyboardOptions.Default.copy(
             imeAction = ImeAction.Done,
@@ -106,11 +133,10 @@ fun TextBox(
         )
     )
 }
-
-
-@Composable
-@Preview
-fun CreateAccountPreview() {
-    CreateAccountScreen({}, {})
-}
+//
+//@Composable
+//@Preview
+//fun CreateAccountPreview() {
+//    CreateAccountScreen(UserState.Initial, {}, { "2", "2", "2", "2", "2" {} })
+//}
 
