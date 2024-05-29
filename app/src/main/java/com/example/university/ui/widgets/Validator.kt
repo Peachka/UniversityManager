@@ -1,7 +1,7 @@
 package com.example.university.ui.widgets
 
 import com.example.university.R
-import com.example.university.data.login.User
+import com.example.university.data.local.login.User
 import com.example.university.di.StringResourceProvider
 import com.example.university.ui.log_in.UserLogIn
 import javax.inject.Inject

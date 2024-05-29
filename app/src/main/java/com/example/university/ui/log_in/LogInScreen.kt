@@ -17,6 +17,7 @@ import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -41,7 +42,9 @@ import com.example.university.R
 fun LogInScreen(
     inputState: UserInput,
     goToCreateAccount: () -> Unit,
-    validateInput: (String, String) -> Unit
+    validateInput: (String, String) -> Boolean,
+    successLogIn: () -> Unit,
+    saveIdToFile: (String, String,  () -> Unit) -> Unit,
 ) {
 
     val username = rememberSaveable { mutableStateOf("") }
@@ -77,19 +80,30 @@ fun LogInScreen(
             textAlign = TextAlign.End
 
         )
-        Button(
-            onClick = { validateInput(username.value, password.value)
-                      Log.d("Log in screen", "$inputState")},
-        ) {
-            Text(text = "Увійти")
+        var shouldNavigate by remember { mutableStateOf(false) }
 
+        LaunchedEffect(shouldNavigate) {
+            if (shouldNavigate) {
+                saveIdToFile(username.value, password.value){
+                    successLogIn()
+                }
+                shouldNavigate = false
+            }
         }
 
-
+        Button(
+            onClick = {
+                val isValid = validateInput(username.value, password.value)
+                if (isValid) {
+                    shouldNavigate = true
+                }
+                Log.d("Log in screen", "emailerr = ${inputState.emailError}, passErr = ${inputState.passwordError}")
+            }
+        ) {
+            Text(text = "Увійти")
+        }
     }
-
 }
-
 @Composable
 fun TextBox(label: String, textState: MutableState<String>, inputError: Boolean) {
 

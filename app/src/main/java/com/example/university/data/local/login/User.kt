@@ -1,4 +1,4 @@
-package com.example.university.data.login
+package com.example.university.data.local.login
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

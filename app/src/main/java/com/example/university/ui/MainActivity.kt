@@ -3,8 +3,11 @@ package com.example.university.ui
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.safeDrawingPadding
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -14,7 +17,11 @@ import com.example.university.ui.create_account.CreateAccountScreen
 import com.example.university.ui.log_in.LogIn
 import com.example.university.ui.log_in.LogInScreen
 import com.example.university.ui.navigation.Screen
+import com.example.university.ui.news.News
+import com.example.university.ui.schedule.Schedule
 import com.example.university.ui.theme.UniversityTheme
+import com.example.university.ui.widgets.ScreenWithBars
+import com.example.university.ui.widgets.ScreenWithoutBars
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -37,17 +44,35 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun NavGraph(navController: NavHostController) {
 
-    NavHost(navController = navController, startDestination = Screen.LogIn.route) {
-        composable(Screen.LogIn.route) { LogIn(goToCreateAcc = { navController.navigate(Screen.CreateAccount.route) }) }
-        composable(Screen.CreateAccount.route) { CreateAccount(goToLoginScreen = { navController.navigate(Screen.LogIn.route) }) }
-        composable(Screen.Home.route) {}
+    NavHost(modifier = Modifier.fillMaxSize().safeDrawingPadding(),
+        navController = navController,
+        startDestination = Screen.LogIn.route) {
+
+        composable(Screen.LogIn.route) {
+            ScreenWithoutBars {
+                LogIn(goToCreateAcc = { navController.navigate(Screen.CreateAccount.route) },
+                    successLogIn = { navController.navigate(Screen.Schedule.route) })
+            }
+        }
+        composable(Screen.CreateAccount.route) {
+            ScreenWithoutBars {
+                CreateAccount(goToLoginScreen = {
+                    navController.navigate(
+                        Screen.LogIn.route
+                    )
+                })
+            }
+        }
+        composable(Screen.Schedule.route) {
+            ScreenWithBars(navController, "Schedule") {
+                Schedule()
+            }
+        }
+
+        composable(Screen.News.route) {
+            ScreenWithBars(navController, "News") {
+                News()
+            }
+        }
     }
 }
-//
-//@Preview(showBackground = true)
-//@Composable
-//fun GreetingPreview() {
-//    UniversityTheme {
-//        Greeting("Android")
-//    }
-//}

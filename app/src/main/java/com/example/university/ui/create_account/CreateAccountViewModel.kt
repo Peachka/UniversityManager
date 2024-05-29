@@ -5,7 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.university.data.login.User
+import com.example.university.data.local.login.User
 import com.example.university.ui.log_in.repository.UserDaoRepository
 import com.example.university.ui.widgets.Validator
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -58,13 +58,15 @@ class CreateAccountViewModel @Inject constructor(
             )
         }
         else {
-            addUser(User(
+            addUser(
+                User(
                 email = email,
                 password = password,
                 name = name,
                 secondName = secondName,
                 group = group
-            ))
+            )
+            )
             goToLoginScreen()
             _state.value = UserState.Success
         }
@@ -72,6 +74,7 @@ class CreateAccountViewModel @Inject constructor(
     fun addUser(user: User){
         viewModelScope.launch {
             userRepo.addUser(user)
+            userRepo.saveUserId(user.uid)
         }
     }
 }

@@ -1,4 +1,4 @@
-package com.example.university.data.login
+package com.example.university.data.local.login
 
 import androidx.room.Dao
 import androidx.room.Insert
@@ -17,4 +17,7 @@ interface UserDAO {
 
     @Update(entity = User::class)
     fun editAccount(user: User)
+
+    @Query("SELECT * FROM user WHERE uid = :uid LIMIT 1")
+    suspend fun getUserById(uid: Int): User?
 }

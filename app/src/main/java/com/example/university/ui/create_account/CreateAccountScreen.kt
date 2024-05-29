@@ -31,7 +31,7 @@ import com.example.university.R
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import com.example.university.data.login.User
+import com.example.university.data.local.login.User
 
 
 @Composable
@@ -133,10 +133,15 @@ fun TextBox(
         )
     )
 }
-//
-//@Composable
-//@Preview
-//fun CreateAccountPreview() {
-//    CreateAccountScreen(UserState.Initial, {}, { "2", "2", "2", "2", "2" {} })
-//}
 
+@Composable
+@Preview
+fun CreateAccountPreview() {
+    CreateAccountScreen(
+        state = UserState.Initial,
+        goToLoginScreen = { /* Do something */ },
+        addUser = { email, password, name, secondName, group, goToLoginScreen ->
+            // Handle the addUser logic here
+        }
+    )
+}
